@@ -3,29 +3,27 @@ title: "Next.js + TypeScript + Tailwind CSS の開発環境をできるだけ丁
 emoji: "🪴"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["nextjs", "eslint", "prettier", "secretlint", "markuplint"]
-published: false
+published: true
 ---
 
 ## はじめに
 
-先日 Next.js + TypeScript + Tailwind CSS を利用して[技術ブログ](https://www.yoshinoki.dev/)を作りました。（まだ全然更新できていません。。）
-
-開発環境を整えようと頑張った結果、それなりに満足のいく環境ができたので記事にしてみました。できるだけ丁寧な解説を心がけたためボリュームが多くなっていますが、よろしければお付き合いください。
+最近、Next.js、TypeScript、Tailwind CSSを使って[技術ブログ](https://www.yoshinoki.dev/)を立ち上げました。（まだあまり更新は進んでいませんが…）
+このプロジェクトを通じて構築した開発環境がわりと快適だったので、誰かの参考になるかもしれないと記事を書いてみることにしました。
+できる限りわかりやすく詳細な説明を心がけましたが、その結果、記事のボリュームが大きくなってしまいました。長文ですが、興味のある方はぜひ読んでみてください🙏
 
 https://github.com/ynoki10/next-ts-tailwind-starter
-また、記事内で解説している内容をセットアップしたリポジトリを公開しています。
-Next.jsのボイラープレートとしても活用可能ですので、興味のある方はぜひ覗いてみてください。
+また、この記事内で紹介した内容をセットアップしたリポジトリを公開しています。
+Next.jsのボイラープレートとして活用可能ですので、興味のある方はぜひ覗いてみてください。
 
 :::message
-内容に関してはできる限り調査して情報をまとめたつもりですが、もし間違いがあった場合はコメントで教えていただけると幸いです。
+内容に関してはできる限り調査して情報まとめたつもりですが、もし間違いがあった場合はコメントで教えていただけると幸いです。
 アドバイスやご感想のコメントもお待ちしております！
 :::
 
 ## 概要
 
 ### 使用ツール・パッケージ
-
-:::details 使用ツール・パッケージ一覧
 
 #### 前提とする環境
 
@@ -56,8 +54,7 @@ Next.jsのボイラープレートとしても活用可能ですので、興味�
 | eslint-plugin-tailwindcss        | 3.14.1     |
 | eslint-plugin-unused-imports     | 3.0.0      |
 
-※ Next.jsはApp routerで進めていますが、Pages routerでも特に設定に影響はありません。
-:::
+※ Next.jsはApp Routerで進めていますが、当記事の内容はPages Routerでもそのまま適用できるようになっていると思います。
 
 ### 設定したこと
 
@@ -66,10 +63,10 @@ Next.jsのボイラープレートとしても活用可能ですので、興味�
 - Tailwind CSS の記法の統一
 - マークアップ（HTML）の構文チェック（Markuplint）
 - API トークンや秘密鍵などのコミットを防止（Secretlint）
+- 各種 VSCode 拡張機能の導入と設定
 - ファイル保存時に自動フォーマット&エラー修正
 - コミット前に自動フォーマット
 - コミット前にコンパイラチェックと各種Lintを実行（エラーがあればコミットを中止）
-- 各種 VSCode 拡張機能の導入
 
 ### 設定していないこと
 
@@ -79,12 +76,13 @@ Next.jsのボイラープレートとしても活用可能ですので、興味�
 ## Next.jsのプロジェクトを作成する
 
 まずは [create-next-app](https://nextjs.org/docs/app/api-reference/create-next-app) を利用して新規プロジェクトを作成します。
+https://nextjs.org/docs/app/api-reference/create-next-app
 
 ```sh
 npx create-next-app@latest
 ```
 
-対話形式の質問に答えると、回答に応じたプロジェクトが作成されます。
+対話形式の質問に答えることで、回答に応じたプロジェクトを作成してくれます。
 
 ```sh
 What is your project named?  [プロジェクト名]
@@ -101,8 +99,8 @@ Would you like to customize the default import alias (@/*)?  No
 
 ## TypeScript（tsconfig.json）の設定を追加する
 
-TypeScriptに関する設定を行います。
-`create-next-app`で作成されたデフォルトの`tsconfig.json`でも十分な印象はありますが、少しだけ設定を追加しておきます。
+続いてTypeScriptに関する設定を行います。
+`create-next-app` で作成されたデフォルトの `tsconfig.json` でもすでに十分な印象はありますが、ここでは少しだけ設定を追加しておきます。
 
 ```diff json:tsconfig.json
  {
@@ -137,7 +135,7 @@ TypeScriptに関する設定を行います。
  }
 ```
 
-追加・変更した内容を確認していきましょう。
+追加・変更した内容は次の通りです。
 
 ### "allowJs": false
 
@@ -167,6 +165,7 @@ https://azukiazusa.dev/blog/typescript-no-unchecked-indexed-access/
 ## Prettierでコードをフォーマットする
 
 [Prettier](https://prettier.io/)を導入しコードの自動整形を行います。
+コードをきれいに保っておくためにも必ず入れておきたいですね。
 https://prettier.io/
 
 ### Prettierのインストール
@@ -197,7 +196,8 @@ https://zenn.dev/rescuenow/articles/c07dd571dfe10f
 
 ### .prettierignoreの設定
 
-Prettier はプロジェクトの`.gitignore`で指定されたファイルを自動的にフォーマット対象外としますが、追加で除外したいファイルがある場合`.prettierignore`というファイルで指定が可能です。
+Prettierはプロジェクトの`.gitignore`で指定されたファイルを自動的にフォーマット対象外とします。
+追加で除外したいファイルがある場合は`.prettierignore`というファイルで指定が可能です。
 https://prettier.io/docs/en/ignore.html
 
 ここでは`package-lock.json` を指定しておきます。（`yarn`や`pnpm`を利用している場合はそれぞれの lock ファイルを指定してください）
@@ -208,13 +208,14 @@ https://prettier.io/docs/en/ignore.html
 
 ### フォーマット用のコマンドを追加
 
-npm-scriptsにコマンドを追加しましょう。
+npm-scriptsにフォーマットのためのコマンドを追加しておきましょう。
+https://ics.media/entry/12226/
 
 ```diff json:package.json
-"scripts": {
-   ...
-+  "prettier": "prettier --write ."
-},
+   "scripts": {
+     ...
++    "prettier": "prettier --write ."
+   },
 ```
 
 この状態で
@@ -223,13 +224,12 @@ npm-scriptsにコマンドを追加しましょう。
 npm run prettier
 ```
 
-を実行すると、プロジェクト内の全て対象ファイルをフォーマットしてくれます。
+を実行すると、プロジェクト内の全ての対象ファイルをフォーマットしてくれます。
 
-### VSCode拡張機能と設定の追加
+### VSCodeのPrettier拡張機能と設定の追加
 
-VSCodeに拡張機能を入れることでファイル保存時の自動フォーマットが可能になります。
-
-まずは`esbenp.prettier-vscode`をVSCodeにインストールして有効化してください。
+VSCodeにPrettierの拡張機能を入れることでファイル保存時に自動フォーマットが可能になります。
+`esbenp.prettier-vscode`をインストールして有効化してください。
 https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 
 さらに`.vscode/settings.json`を作成して、次のように記述します。
@@ -243,13 +243,14 @@ https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 
 これにより、ファイル保存時に自動でPrettierによるフォーマットが実行されます。
 
-:::details 自動フォーマットの対象を限定したい場合
+:::details 自動フォーマットする拡張子を限定したい場合
 
-対象ファイルを限定したい場合は次のように記述できます。
+自動フォーマットする拡張子を限定したい場合は次のように記述できます。
 
 ```json:.vscode/settings.json
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": false,
   "[javascript]": {
     "editor.formatOnSave": true
   },
@@ -267,23 +268,29 @@ https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 
 こうすると`.js` `.json` `.ts` `.tsx` の保存時のみ自動フォーマットが実行されます。
 
+または全ファイルに対して`"editor.formatOnSave": true`とした上で、無効化したい拡張子に`"editor.formatOnSave": false`を指定するというブラックリスト方式でもOKです。
+
 :::
 
-## ESLintの設定を追加する
+## ESLintの設定を追加してTypeScriptコードの品質を高める
 
 TypeScript（JavaScript）の構文チェックのため[ESLint](https://eslint.org/)の設定を行います。
+コードの品質を高く保つためにもここはできるだけ丁寧に設定しておきます。
 https://eslint.org/
 
 ### デフォルトの設定を確認
 
-`create-next-app` で作成された `package.json` と `.eslintrc.json` を見てみましょう。
+まずは `create-next-app` で作成された `package.json` と `.eslintrc.json` を見てみましょう。
 
 ```json:package.json
 {
   "scripts": {
+    ...
     "lint": "next lint"
   },
+  ...
   "devDependencies": {
+    ...
     "eslint": "^8",
     "eslint-config-next": "14.1.0"
   }
@@ -298,14 +305,16 @@ https://eslint.org/
 
 すでに
 
+- npm-scripts（`lint`）の設定
 - `eslint`と`eslint-config-next`のインストール
-- npm-scripts（`next lint`）の設定
-- `.eslintrc.json`の`extends`に`next/core-web-vitals`を設定
+- 設定ファイル（`.eslintrc.json`）の`extends`に`next/core-web-vitals`を指定
 
-までセットアップ済みであることが分かります。
+までセットアップされていることが分かります。
 
-このうち`next/core-web-vitals`には主にReactやNext.js独自のルールが含まれています。
-（詳細について知りたい方は[Next.jsの公式ドキュメント](https://nextjs.org/docs/pages/building-your-application/configuring/eslint#eslint-config)を参照してください。）
+ちなみに`next/core-web-vitals`は主にReactやNext.js独自のルールを適用するものとなっています。（詳細について知りたい方は[Next.jsの公式ドキュメント](https://nextjs.org/docs/pages/building-your-application/configuring/eslint#eslint-config)を参照してください。）
+
+ただ、正直なところこれ**だけ**では全く安心して開発ができません。
+そのため、これからプラグインや設定を追加していきます。
 
 :::details 【補足】next/core-web-vitals について
 `next/core-web-vitals` の内部では最終的に次の4つのプラグインをインポートしています。
@@ -315,13 +324,13 @@ https://eslint.org/
 - `eslint-plugin-jsx-a11y`
 - `eslint-plugin-import`
 
-さらに次の3つのプラグインの推奨ルールセット(`recommended`)を適用しています。
+そして、次の3つのプラグインの推奨ルールセット(`recommended`)を適用しています。
 
 - `eslint-plugin-react`
 - `eslint-plugin-react-hooks`
 - `eslint-plugin-next`
 
-深掘りしていくと少しややこしいですが、ESLintの[pluginsとextendsの関係性を理解](https://blog.ojisan.io/eslint-plugin-and-extend/)した上で[eslint-config-nextのリポジトリ](https://github.com/vercel/next.js/blob/canary/packages/eslint-config-next/index.js)を眺めてみると仕組みはおおよそ把握できると思います。
+深掘りしていくと少しややこしいですが、ESLintの[pluginsとextendsの関係性を理解](https://blog.ojisan.io/eslint-plugin-and-extend/)した上で[eslint-config-nextのリポジトリ](https://github.com/vercel/next.js/blob/canary/packages/eslint-config-next/index.js)を眺めてみると仕組みがおおよそ把握できると思います。
 
 https://blog.ojisan.io/eslint-plugin-and-extend/
 :::
@@ -329,14 +338,14 @@ https://blog.ojisan.io/eslint-plugin-and-extend/
 :::details 【補足】next lint の対象ディレクトリについて
 `next lint`はデフォルトでは`pages/` `app/` `components/` `lib/` `src/`のみをLintの対象とします。
 
-これ以外のディレクトリを使用したり、逆Lintの対象ディレクトリを制限したい場合は`next.config.js`にて設定が必要です。
+これ以外のディレクトリを使用したり、逆にLintの対象ディレクトリを制限したい場合は`next.config.js`にて設定が必要です。
 
-例）
+例）ESLintの対象を `app/` `components/` `utils/` `hooks/` の4ディレクトリとする
 
 ```js:next.config.js
 const nextConfig = {
   eslint: {
-    dirs: ["app", "components", "utils", "hooks"], // 'app', 'components', 'utils', 'hooks' ディレクトリに対して ESLint を実行する
+    dirs: ["app", "components", "utils", "hooks"],
   },
 };
 
@@ -349,8 +358,10 @@ https://www.mizdra.net/entry/2023/01/13/013855
 
 ### ESLintの推奨ルールを設定
 
-`next/core-web-vitals`には**JavaScriptの基本的な構文に関するルールが含まれていません**。
-そこで、まずはESLint本体の推奨ルールセット（`eslint:recommended`）を設定します。
+`next/core-web-vitals` には **JavaScriptの基本的な構文に関するルールが含まれていません**。
+そこで、まずはESLint本体の推奨ルールセット（`eslint:recommended`）を適用しましょう。
+
+`.eslintrc.json`を次のように更新してください。
 
 ```diff json:.eslintrc.json
  {
@@ -366,19 +377,19 @@ https://www.tam-tam.co.jp/tipsnote/javascript/post11934.html
 
 ### TypeScriptに関するルールの追加
 
-[typescript-eslint](https://typescript-eslint.io/)を導入してTypeScript用のESLintルールを追加します。
+続いてTypeScript用のESLintルール [typescript-eslint](https://typescript-eslint.io/) を追加しましょう。
 https://typescript-eslint.io/
 
-まずは次の 2 パッケージをインストールしてください。
+まずは次の2パッケージをインストールしてください。
 
 ```sh
 npm i -D @typescript-eslint/eslint-plugin @typescript-eslint/parser
 ```
 
-| パッケージ名                     | 概要                                |
-| -------------------------------- | ----------------------------------- |
-| @typescript-eslint/parser        | TypeScript の構文を解析するパーサー |
-| @typescript-eslint/eslint-plugin | Typescript 用の拡張ルールと推奨設定 |
+| パッケージ名                     | 概要                                                                       |
+| -------------------------------- | -------------------------------------------------------------------------- |
+| @typescript-eslint/parser        | TypeScriptの構文を解析するパーサー                                         |
+| @typescript-eslint/eslint-plugin | Typescript用のESLintプラグイン<br>（推奨ルールセットもここに含まれている） |
 
 そして`.eslintrc.json` を次のように更新します。
 
@@ -396,11 +407,11 @@ npm i -D @typescript-eslint/eslint-plugin @typescript-eslint/parser
  }
 ```
 
-追加した内容について確認していきましょう。
+追加した内容は以下の通りです。
 
 #### plugin:@typescript-eslint/recommended-type-checked
 
-typescript-eslint には次のように[6 つのルールセット](https://typescript-eslint.io/linting/configs/)があります。
+`typescript-eslint` には次の[6つのルールセット](https://typescript-eslint.io/linting/configs/)があります。
 
 |                      | 型情報を利用しない | 型情報を利用する         |
 | -------------------- | ------------------ | ------------------------ |
@@ -408,18 +419,19 @@ typescript-eslint には次のように[6 つのルールセット](https://type
 | 推奨ルール           | recommended        | recommended-type-checked |
 | 構文を統一するルール | stylistic          | stylistic-type-checked   |
 
-どれを使えばよいのか迷いますが、調べる中で
+これだけではどれを使えばよいか迷ってしまいますね。
+
+完全に私感ですが、これらのルールについて調べた結果として、私は次のような印象を抱きました。
 
 - strict は厳格すぎて採用の是非について意見が分かれる
 - stylistic は癖が強く一部の挙動に影響がある
 - type-checked のルールは入れておいて困ることは無さそう
 
-ということが分かってきました。
 そのため、ここでは`recommended-type-chekced`（推奨&型情報を利用する）のみを使用しています。
 
 :::message
 全てのルールを詳しく確認したわけではないので間違っている部分があるかもしれません。
-誤りに気づいた方はコメントくださると嬉しいです。 🙇
+誤りに気づいた方はコメントくださると嬉しいです。
 :::
 
 https://typescript-eslint.io/linting/configs/
@@ -432,16 +444,17 @@ TypeScript の構文を解析するためのパーサーを指定しています
 
 #### parserOptions.project
 
-extendsで`recommended-type-chekced`（型情報を利用するルール）を指定したため、`parserOptions.project`の指定が必須となります。
-プロジェクトの`tsconfig.json`の場所を指定することで、ESLintがTypeScriptに関する設定を解釈してくれます。
+extendsで`recommended-type-chekced`（型情報を利用するルール）を指定すると、この`parserOptions.project`の指定が必須となります。
+ここでプロジェクトの`tsconfig.json`のパスを指定することで、ESLintにプロジェクトのTypeScript設定を伝えることができます。
 
-ちなみにパスではなく true を渡すと自動的に一番近い tsconfig.json を探してくれるそうです。（ここではわかりやすさのため明示的にパスを指定しました）
+ちなみにパスではなく`true`を渡すと自動的に一番近い`tsconfig.json`を探してくれるそうです。（ここではわかりやすさのため明示的にパスを指定しました）
 
 https://typescript-eslint.io/packages/parser/#project
 
 ### 不要importの削除
 
-コード内で使用していないimportの自動削除をしてくれるプラグイン [eslint-plugin-unused-imports](https://github.com/sweepline/eslint-plugin-unused-imports) を追加します。未使用のインポートを手動で消す手間が省けるので、入れておくとかなり便利です。
+続いて、コード内で使用していないimportの自動削除をしてくれるプラグイン [eslint-plugin-unused-imports](https://github.com/sweepline/eslint-plugin-unused-imports) を追加します。
+未使用のimport文を手動で消す手間が省けるため、入れておくとかなり便利です。
 
 https://github.com/sweepline/eslint-plugin-unused-imports
 
@@ -463,11 +476,12 @@ npm i -D eslint-plugin-unused-imports
 
 ### importの順番を整理
 
-importの順番をルール化してESLintに自動で並びかえてもらいましょう。
-これは `eslint-plugin-import`の[import/order](https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md)を使って設定できます。
+続いてimportの順番を自動で整列してもらうように設定を追加していきます。
+これは `eslint-plugin-import` の [import/order](https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md) を使って設定ができます。
+@[card](https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md)
 
-並べ方やはそれぞれの好みやディレクトリ構成に応じて設定してください。
-私はあまりこだわりがないので、次のような設定としています。
+`eslint-plugin-import` は `eslint-config-next` にすでに含まれているため、ここではパッケージのインストールや `plugins` の指定は不要です（明示的にインストール&指定しても問題はありません）。
+並べ方はそれぞれの好みやディレクトリ構成によりますが、私はとりあえず次のような設定としています。
 
 ```diff json:.eslintrc.json
    "rules": {
@@ -493,33 +507,32 @@ importの順番をルール化してESLintに自動で並びかえてもらい�
    }
 ```
 
+こだわりたい方は[公式ドキュメント](https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md)や以下の記事などを参考にしてみてください。
 https://zenn.dev/knowledgework/articles/0994f518015c04#import%E3%81%AE%E8%87%AA%E5%8B%95%E6%95%B4%E5%88%97%EF%BC%88import%2Forder%EF%BC%89
 https://zenn.dev/riemonyamada/articles/02e8c172e1eeb1
 
-:::message
-`eslint-plugin-import` は `eslint-config-next`に含まれているためパッケージのインストールや`plugins`の指定は不要です。（明示的にインストール&指定しても問題はありません）
-:::
-
 ### Tailwind CSSに関する設定を追加
 
-「Tailwindのクラス名の順番を揃えたい」「`pr-1 pl-1`を自動で`px-1`に変換して欲しい」などと思ったことはないでしょうか？
-そんな悩みを解決するためのプラグイン[eslint-plugin-tailwindcss](https://github.com/francoismassart/eslint-plugin-tailwindcss) を追加します。
+Tailwind CSSを使っていて「クラス名の順番がバラバラでわかりにくい」「`pr-1 pl-1` と `px-1`のような書き方が混在していて気持ち悪い」などと思ったことはないでしょうか？
+私はあります。
+
+そんな悩みを解決するために、プラグイン [eslint-plugin-tailwindcss](https://github.com/francoismassart/eslint-plugin-tailwindcss) を追加しましょう。
 https://github.com/francoismassart/eslint-plugin-tailwindcss
 
-これを入れることで
+このプラグインによって次のようなことが可能になります。（詳しくは[ドキュメント](https://github.com/francoismassart/eslint-plugin-tailwindcss)を参照）
 
 - クラス名の順序の整列
 - 負の値の書き方の統一（`-top-[5px]` を `top-[-5px]`にする）
 - ショートハンドの強制（`pr-1 pl-1` を `px-1`にする）
 - 重複するプロパティ指定の警告（`p-2 p-3` のような重複に警告を出す）
 
-などができるようになります。（詳しくは[ドキュメント](https://github.com/francoismassart/eslint-plugin-tailwindcss)を参照）
-
-パッケージをインストールして、推奨ルール（`recommended`）をセットすれば設定が完了します。
+まずはパッケージをインストールしてください。
 
 ```sh
 npm i -D eslint-plugin-tailwindcss
 ```
+
+そして `.eslintrc.json` に推奨ルールをセットすれば設定完了です。
 
 ```diff json:.eslintrc.json
   "extends": [
@@ -530,19 +543,22 @@ npm i -D eslint-plugin-tailwindcss
   ],
 ```
 
-これでルールに従わない並び順や書き方をしているときにエラーや警告を出してくれるようになります。
-
 :::message
-Tailwind CSS公式のPrettierプラグイン（[prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss)）も存在するのですが、こちらはクラス順のソートにしか対応していません。そのためここでは機能が充実しているESLintのプラグインを使っています。
+Tailwind CSS公式のPrettierプラグイン（[prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss)）も存在するのですが、こちらはクラス順のソートにしか対応していません。そのためここでは機能が充実しているESLintのプラグインを採用しています。
 :::
 
 ### Prettierと衝突するルールを無効化
 
-ESLintでフォーマットに関するルールを設定していると、Prettierとバッティングしてしまう可能性があります。そんなバッティングを回避するため`eslint-config-prettier`を追加します。
+ESLintでフォーマットに関するルールを設定していると、Prettierとバッティングしてしまう可能性があります。そんなバッティングを回避するためのルール [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) を追加します。
+https://github.com/prettier/eslint-config-prettier
+
+まずはパッケージをインストールしてください。
 
 ```sh
 npm i -D eslint-config-prettier
 ```
+
+そして `.eslintrc.json` の `extends` にこの設定を追加すればOKです。
 
 `eslint-config-prettier`は「Prettierと衝突する可能性のある全てのESLlintルールをオフにする」という設定なので、extendsの一番最後に指定するのがよいでしょう。（`extends`では後に指定したルールが前のルールを上書きします）
 
@@ -557,8 +573,8 @@ npm i -D eslint-config-prettier
 ```
 
 :::details .eslintrc.json に関する補足
-ここまで `plugins`に`@typescript-eslint`や`tailwindcss`、`import`を指定していないことに疑問を持った方がいるかも知れません。
-実を言うと、これらは `plugins` に書いても書かなくても同じように動作します。
+ここまで `plugins` に `@typescript-eslint` や `tailwindcss`、`import` を指定していないことに疑問を持った方がいるかも知れません。
+実を言うとこれらは `plugins` に書いても書かなくても同じように動作します。
 
 - `@typescript-eslint` や `tailwindcss`は extends で適用しているため指定不要
 - `import` は `next/core-web-vitals` 内で読み込まれているため指定不要
@@ -591,32 +607,32 @@ npm-scriptsにESLintのfix用コマンドを追加します。
 npm run lint:fix
 ```
 
-を実行すると、`next lint`の対象ファイルをチェックし、可能な箇所は自動修正してくれます。
+を実行すると、`next lint`の対象ファイルをチェックした上で、可能な箇所は自動修正してくれます。
 
-### VSCode拡張機能の追加
+### VSCodeのESLint拡張機能と設定の追加
 
-VSCodeにESLintの拡張機能を追加します。これによりエディタ上に警告を出したり、ファイル保存時に自動修正が行えるようになります。
+VSCodeにESLintの拡張機能を追加しましょう。これによりエディタ上にESLintの警告を出したり、ファイル保存時の自動修正を行うことが可能になります。
 
-`dbaeumer.vscode-eslint` を VSCode にインストールして有効化してください。
+`dbaeumer.vscode-eslint` をインストールして有効化してください。
 https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
 
-これでエディタに ESLint のエラーが表示されるようになります。
-さらに`.vscode/settings.json`を更新します。
+これでエディタにESLintのエラーが表示されるようになります。
+さらに `.vscode/settings.json` を更新します。
 
 ```diff json:.vscode/settings.json
  {
 +  "editor.codeActionsOnSave": {
 +    "source.fixAll.eslint": "explicit" // ファイル保存時にESLintの自動修正を実行する
 +  },
-+  ...
+   ...
  }
 ```
 
-これでファイル保存時に自動修正が行われるようになります。
+これにより、ファイル保存時にESLintによる自動修正が行われるようになります。
 
 ## MarkuplintでHTMLの構文をチェックする
 
-HTMLの構文チェックをするため[Markuplint](https://markuplint.dev/ja/)を導入します。
+続いてHTMLの構文チェックをするため [Markuplint](https://markuplint.dev/ja/) を導入していきましょう。
 アクセシビリティ向上のためにもぜひ入れておくことをおすすめします。
 https://markuplint.dev/ja/
 
@@ -628,7 +644,7 @@ https://markuplint.dev/ja/
 npx markuplint --init
 ```
 
-対話形式の質問に答えることで、設定ファイルの作成から必要なパッケージのインストールまでを自動で実行してくれます。
+対話形式の質問に答えることで、設定ファイルの作成から必要なパッケージのインストールまでを自動実行してくれます。
 
 ```sh
 ✔ Which do you use template engines? · React (JSX)
@@ -637,7 +653,7 @@ npx markuplint --init
 ✔ Does it import the recommended config? (y/N) · true
 ```
 
-以上の内容で回答を進めると`.markuplintrc`という設定ファイルが作成され、次の3パッケージがインストールされます。
+以上の内容で回答を進めると `.markuplintrc` という設定ファイルが作成され、さらに次の3パッケージがインストールされます。
 
 | パッケージ名           | 概要                                                           |
 | ---------------------- | -------------------------------------------------------------- |
@@ -668,14 +684,7 @@ npx markuplint --init
 
 ```diff json:.markuplintrc
  {
-   "specs": {
--    "\\.[jt]sx?$": "@markuplint/react-spec"
-+    ".tsx": "@markuplint/react-spec" // tsxのみの指定にする
-   },
-   "parser": {
--    "\\.[jt]sx?$": "@markuplint/jsx-parser"
-+    ".tsx": "@markuplint/jsx-parser" // tsxのみの指定にする
-   },
+   ...
    "extends": [
 -    "markuplint:recommended"
 +    "markuplint:recommended-react" // recommended ＋ React用の追加ルール
@@ -683,26 +692,26 @@ npx markuplint --init
  }
 ```
 
-今回はJSファイルを使わない方針なので対象ファイルは`.tsx`のみとしました。（特に変更しなくても問題はありませんが一応）
+`extends`の設定を`markuplint:recommended-react`（React用の推奨プリセット）に変更しました。これは「基本プリセットを全て読み込んだ上で React 用のルールを追加する」という設定[^1]です。
 
-また`extends`の設定を`markuplint:recommended-react`（React用の推奨プリセット）に変更しました。これは「基本プリセットを全て読み込んだ上で React 用のルールを追加する」という設定[^1]です。
+[^1]: 現状では`No hard coding ID`というルールのみが追加で有効になるようです。これはIDの重複を防ぐために、要素のid属性をハードコードしている場合に警告を表示するルールです。これに関して制作者の[ゆうてん](https://zenn.dev/yusukehirao)さんが[解説記事](https://zenn.dev/yusukehirao/articles/id-attribute-strategy)を書いてくれています。
 
 :::message
-Markuplintにはそれほどたくさんのルールがあるわけではないので、一度[ドキュメント](https://markuplint.dev/ja/docs/rules)に目を通しておくのがおすすめです。わりとサクッと読めます。
+Markuplintの[ドキュメント](https://markuplint.dev/ja/docs/rules)には一度目を通しておくのがおすすめです。それほどたくさんルールがあるわけではないので、わりとサクッと読めます。
 :::
 
-:::details Markuplintのプリテンダー機能
-Markuplintでは[プリテンダー](https://markuplint.dev/ja/docs/guides/besides-html#pretenders)という機能を利用して、コンポーネントごとに対応するHTML要素を定義することができます。頻出コンポーネントをできるだけ設定しておくことでMarkuplintにチェックしてもらえるので便利そうです。
+:::details 【補足】Markuplintのプリテンダー機能について
+Markuplintの[プリテンダー](https://markuplint.dev/ja/docs/guides/besides-html#pretenders)という機能を利用すると、コンポーネントごとに対応するHTML要素を定義することができます。
 
-まだきちんと使っていませんが、Nextの`<Image>`をimg要素、`<Link>`をa要素に紐付けるような設定をプロジェクトにデフォルトで入れておいても良いかもしれません。
+できる限り多くのコンポーネントにプリテンダーを設定するのが望ましいですが、まずは頻出コンポーネントから優先的に設定しておくだけでも効果が期待できそうです。
+
+私自身まだきちんと使えていませんが、Nextの`<Image>`をimg要素、`<Link>`をa要素に紐付ける設定をプロジェクトにデフォルトで入れておくのも良いかもしれません。
 https://markuplint.dev/ja/docs/guides/besides-html#pretenders
 :::
 
-[^1]: 現状では`No hard coding ID`というルールのみが追加で有効になるようです。これは要素のid属性をハードコードしている場合に警告が表示されるもので、IDの重複を防ぐためのルールです。これに関して制作者の[ゆうてん](https://zenn.dev/yusukehirao)さんが[解説記事](https://zenn.dev/yusukehirao/articles/id-attribute-strategy)を書いてくれています。
-
 ### Markuplint用のコマンドを追加
 
-npm-scripts を追加しておきます。
+Markuplintについても npm-scripts を追加しておきます。
 
 ```diff json:package.json
    "scripts": {
@@ -721,10 +730,12 @@ npm run markuplint
 
 [^2]: markuplint には fix コマンドも存在しているのですが、私の環境ではうまく動作させられなかったため今回は使っていません。原因が調査できたら追記したいです。（[CLI のドキュメント](https://markuplint.dev/ja/docs/guides/cli)）
 
-### VSCode拡張機能と設定の追加
+### VSCodeのMarkuplint拡張機能と設定の追加
 
 MarkuplintにもVSCode拡張機能があるので入れておきましょう。
-`yusukehirao.vscode-markuplint`をVSCode にインストールして有効化してください。
+これを入れておくとエディタ上で Markuplint の警告が表示されるようになります。
+
+`yusukehirao.vscode-markuplint`をインストールして有効化してください。
 https://marketplace.visualstudio.com/items?itemName=yusukehirao.vscode-markuplint
 
 さらに`.vscode/settings.json`を更新します。
@@ -736,15 +747,17 @@ https://marketplace.visualstudio.com/items?itemName=yusukehirao.vscode-markuplin
  }
 ```
 
-これによってエディタ上で Markuplint の警告が表示されるようになります。
+これによってエディタ上で Markuplint のエラーを確認できるようになります。
 
 ## Secretlintで秘匿情報の漏洩を防ぐ
 
-[Secretlint](https://github.com/secretlint/secretlint)はAPIトークンや秘密鍵など、リポジトリにコミットしてはいけないデータがファイルに含まれていないかをチェックするツールです。
+続いてSecretlintの導入を進めていきましょう。
+
+[Secretlint](https://github.com/secretlint/secretlint) はAPIトークンや秘密鍵など、リポジトリにコミットしてはいけないデータがファイルに含まれていないかをチェックするツールです。
 https://github.com/secretlint/secretlint
 https://efcl.info/2020/03/24/secretlint/
 
-「APIへのアクセストークンを誤って公開してしまった」というような事故を防ぐためにも導入しておきましょう。（これを入れておけば絶対安心というものではないのでご注意ください。念のため。）
+「APIへのアクセストークンを誤って公開してしまった」というような事故を防ぐためにもぜひ導入しておきましょう。（もちろんこれを入れておけば絶対安心、というものではないのでご注意ください。）
 
 ### Secretlintとルールセットのインストール
 
@@ -786,8 +799,9 @@ npx secretlint --init
    },
 ```
 
-`--secretlintignore .gitignore` で `.gitignore`に書かれたファイルを対象外としています。
-`--maskSecrets` はエラーメッセージ内のシークレットを `***` でマスクしてくれるオプションです。
+`--secretlintignore` は除外ファイルを指定するオプションで、ここでは `.gitignore`に書かれたファイルを対象外としています。
+
+`--maskSecrets` はエラーメッセージに出力するシークレット情報を `***` でマスクしてくれるオプションです。（CIで実行した際のログなどに残らないよう、有効にしておくのがおすすめです）
 
 この状態で
 
@@ -795,27 +809,27 @@ npx secretlint --init
 npm run secretlint
 ```
 
-を実行すると、対象ファイルにシークレットデータが無いかチェックしてくれます。
-試しに次のようなコードを追加して secretlint を実行してみます。
+を実行すると、対象ファイル内にシークレットデータが無いかチェックしてくれます。
+試しに次のようなコードを追加してみてください。
 
 ```ts:secret.ts
 const AWS_KEY = 'AKIAXXXXXXEXAMPLEKEY';
 ```
 
-すると次のようなエラーが表示されます。
+この状態で`npm run secretlint` を実行すると次のようなエラーが表示されます。
 
 ```sh
 1:24  error  [AWSAccessKeyID] found AWS Access Key ID: ********************  @secretlint/secretlint-rule-preset-recommend > @secretlint/secretlint-rule-aws
 ```
 
-SecretlintがAWSのアクセスキーを検出し、エラーを出してくれていますね。
+SecretlintがAWSのアクセスキーを検出し、エラーを出してくれていることが分かりますね。
 
 ## Husky + lint-staged でコミット前にコードをチェックする
 
 ここまでコードチェックのためにさまざまな設定を追加してきました。
-ここからは[Husky](https://typicode.github.io/husky/)と[lint-staged](https://github.com/lint-staged/lint-staged)を使ってコミット前にコードチェックを実行し、問題のあるコードがコミットされないような環境を整えていきます。
+ここからは[Husky](https://typicode.github.io/husky/)と[lint-staged](https://github.com/lint-staged/lint-staged)を使ってGitのコミット前にコードチェックを実行し、問題のあるコードがコミットされないような環境を整えていきます。
 
-| ツール名        | 概要                                                                                                                 |
+| ツール名                | 概要                                                                                                                 |
 | --------------- | -------------------------------------------------------------------------------------------------------------------- |
 | **Husky**       | Gitのコミットやプッシュ実行時に処理を呼び出すツール<br>（ここではpre-commitフックの際に`lint-staged`を呼び出します） |
 | **lint-staged** | Gitでステージされたファイルに対して処理を呼び出すツール                                                              |
@@ -833,22 +847,24 @@ npm i -D husky lint-staged
 
 ### Husky の初期化と設定ファイルを作成
 
-Huskyを初期化して、`pre-commit`用の設定ファイルを作成します。
+続いて、Huskyの初期化と設定ファイルの作成を行います。
+次のコマンドを実行してください。
 
 ```sh
 npx husky init
 ```
 
-`init`はHusky v9から追加されたコマンドで、以下の処理を実行してくれます。
+`husky init` はHusky v9から追加されたコマンドで、以下の処理を実行してくれます。
 
 - husky の初期化
-- npm-scriptsの`prepare`コマンドに`husky`を追加（`npm install`時にHuskyの初期化を実行する設定）
+- npm-scriptsの `prepare` コマンドに `husky` を追加（＝ `npm install` 時にHuskyの初期化を実行する設定）
 - `pre-commit` 用の設定ファイル（`.husky/pre-commit`）を作成
 
 作成された `.husky/pre-commit` を次のように更新します。
 
-```sh
-npx lint-staged
+```diff :.husky/pre-commit
+- npm run test
++ npx lint-staged
 ```
 
 これでコミット前に `lint-staged` が呼び出されるようになります。
@@ -857,7 +873,10 @@ https://typicode.github.io/husky/get-started.html
 
 ### lint-staged の設定
 
-プロジェクトルートに `.lintstagedrc.js` を作成し[Next.js のドキュメント](https://nextjs.org/docs/pages/building-your-application/configuring/eslint#lint-staged)にしたがってまずは以下の内容を記述します。
+続いて`lint-staged`の設定を進めていきます。
+
+プロジェクトルートに `.lintstagedrc.js` を作成してください。
+まずは[Next.jsのドキュメント](https://nextjs.org/docs/pages/building-your-application/configuring/eslint#lint-staged)にしたがって、以下の内容を記述します。
 
 ```js:.lintstagedrc.js
 const path = require("path");
@@ -872,8 +891,9 @@ module.exports = {
 };
 ```
 
-これでコミット前にステージされたファイルに対して`next lint --fix`が実行されることになります。
-ここではさらに手を加えて次のようにします。
+これでコミット時、ステージされたファイルに対して`next lint --fix`が実行されることになります。
+
+ここからさらに手を加えて次のようにします。
 
 ```diff js:.lintstagedrc.js
  const path = require("path");
@@ -884,37 +904,40 @@ module.exports = {
      .join(" --file ")}`;
 
  module.exports = {
-+  "*": ["secretlint"],
++  "*": ["secretlint --maskSecrets"],
 +  "*.{js,cjs,mjs,json,ts,tsx,css}": ["prettier --write"],
 +  "*.{ts,tsx}": ["bash -c tsc --noEmit", buildEslintCommand, "markuplint"],
  };
 ```
 
-設定した内容は次の通りです。
+ここで設定した内容は次の通りです。
 
-| 対象ファイル                                    | 実行する内容                                                                                   |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| 全ファイル                                      | Secretlintの秘匿情報チェック                                                              |
-| `.js` `.cjs` `.mjs` `.json` `.ts` `.tsx` `.css` | Prettierのフォーマット                                                                    |
+| 対象ファイル                                    | 実行する内容                                                                       |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------- |
+| 全ファイル                                      | Secretlintの秘匿情報チェック                                                       |
+| `.js` `.cjs` `.mjs` `.json` `.ts` `.tsx` `.css` | Prettierのフォーマット                                                             |
 | `.ts` `.tsx`                                    | TypeScriptのコンパイルチェック<br>ESLintの構文チェック<br>Markuplintの構文チェック |
 
-この状態でファイルをコミットしようとするとそれぞれのファイルに対してチェックが実行され、エラーがある場合はコミットを中止してくれます。
-（もしチェックを無視してコミットしたい場合、コミット時に `-no-verify` か `-n` フラグをつけることでスキップができます。)
+コミット前チェックの設定は以上です。
 
-:::details コミット時 `command not found` のエラーが出る場合
+この状態でファイルをコミットすると、ステージされた各ファイルに対してチェックを実行し、もしエラーがあればコミットを中止してくれます。
 
-Volta や nvm などの Node.js バージョン管理ツールを使用しているとGUI（VSCodeのGitやSourceTreeなど）からのコミットの際 `command not found` のエラーが出るかもしれません。
+チェックを無視してコミットしたいときは、コミット時に `-no-verify` か `-n` フラグをつけることでスキップができます。
 
-その場合はHuskyの実行前にPATHを通す設定が必要になります。
+:::details 【補足】コミット時 `command not found` のエラーが出る場合
 
-筆者はvoltaを使用しているため、次のような内容で`~/.config/husky/init.sh`を作成しています。
+Volta や nvm などの Node.js バージョン管理ツールを使用しているとGUI（VSCodeのGitやSourceTreeなど）からコミットしたとき `command not found` のエラーが出るかもしれません。
 
-```bash
+その場合、Huskyの実行前にPATHを通す設定が必要になります。
+
+私はVoltaを使用しているため、次のような内容で `~/.config/husky/init.sh` を作成しました。
+
+```sh:~/.config/husky/init.sh
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 ```
 
-詳しくは[Huskyのドキュメント](https://typicode.github.io/husky/how-to.html#node-version-managers-and-guis)を参照ください。
+詳しくは[Huskyのドキュメント](https://typicode.github.io/husky/how-to.html#node-version-managers-and-guis)や参考記事を参照ください。
 
 https://typicode.github.io/husky/how-to.html#node-version-managers-and-guis
 https://zenn.dev/cureapp/articles/f2722061739b51
@@ -922,21 +945,20 @@ https://zenn.dev/cureapp/articles/f2722061739b51
 
 ## VSCode の設定
 
-VSCodeに関する設定をさらにいくつか追加しておきます。
+ここまででかなり開発環境が整ってきましたね。
+ここからVSCodeに関する設定をもう少しだけ追加していきます。
 
 ### Tailwind CSS IntelliSense（VSCode の拡張機能）を追加
 
-`bradlc.vscode-tailwindcss` をインストールして有効化しておきましょう。
-エディタ上での自動補完が効くようになってとても便利です。
+Tailwind CSSのクラス名の自動補完をしてくれる、とても便利な拡張機能があるので導入しておきましょう。
+`bradlc.vscode-tailwindcss` をインストールして有効化するだけでOKです。
 
 https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
 https://tailwindcss.com/docs/editor-setup
 
-### 拡張機能を設定ファイルに記載
+### プロジェクトで使用している拡張機能を設定ファイルに記載
 
-`.vscode/extensions.json`というファイルに拡張機能のリストを指定しておきます
-この状態で拡張機能の検索欄に`@recommended`と入力すると指定したの拡張機能が一覧で表示されます。
-チームメンバー全員で環境を揃える際に便利なので設定しておきます。
+`.vscode/extensions.json` というファイルに、必要なVSCode拡張機能を指定しておきましょう。
 
 ```js:.vscode/extensions.json
 {
@@ -949,10 +971,12 @@ https://tailwindcss.com/docs/editor-setup
 }
 ```
 
+こうすることでVSCodeの拡張機能検索欄に`@recommended`と入力するだけで、必要な拡張機能が一覧表示されるようになります。（メンバー間で環境を揃える際にとても便利）
+
 ### 未importモジュールの自動追加
 
 ファイル保存時に未importのモジュールを自動で探してimportしてくれる便利な機能があるので有効化しておきましょう。
-`.vscode/settings.json`に追記します。
+`.vscode/settings.json`を次のように更新します。
 
 ```diff json:.vscode/settings.json
  {
@@ -964,12 +988,16 @@ https://tailwindcss.com/docs/editor-setup
  }
 ```
 
+これだけでファイル保存時、VSCodeが未importモジュールを探してimport文を追加してくれるようになります。
+
 ## プロジェクトに応じて追加する設定
+
+最後に、プロジェクトに応じて設定しておくと便利な機能を紹介します。
 
 ### import の依存関係をルール化
 
-「このコンポーネントはこのファイルからしか読み込めない」というような依存関係のルールを決めることができます。
-[eslint-plugin-strict-dependencies](https://www.npmjs.com/package/eslint-plugin-strict-dependencies) というプラグインを利用して設定が可能です。
+[eslint-plugin-strict-dependencies](https://www.npmjs.com/package/eslint-plugin-strict-dependencies) というプラグインを利用すると、「このコンポーネントはこのファイルからしか読み込めない」というような依存関係のルールを決めることができます。
+
 https://www.npmjs.com/package/eslint-plugin-strict-dependencies
 
 まずはパッケージをインストールします。
@@ -1010,17 +1038,17 @@ https://zenn.dev/knowledgework/articles/0994f518015c04#%E4%BE%9D%E5%AD%98%E9%96%
 
 ## まとめ
 
-きちんと環境を整える中で多くのことを学んだ。
+開発環境を整える過程で新しい知識をたくさん得ることができました。
+特にESLintに関してはこれまでかなり雰囲気で使っていたところがあったので、整理できてスッキリしています。
 
-ESLint に関しては今後 flat config という新しい設定方法に変わっていく（？）ようなので、キャッチアップが必要そう。最近では rome や biome といったツールも出てきている。
+ただ、ESLintに関しては[v9以降 Flat Config という新たな設定方法へ移行することがアナウンス](https://eslint.org/blog/2023/10/flat-config-rollout-plans/)されていたり、ESLint + Prettier を代替する [Biome](https://biomejs.dev/ja/) といったツールも出てきているので、これからもまだまだキャッチアップが必要そうですね。。😱
 
-さらにテストツールや CI の設定も学んで、より堅牢な環境を構築できるようになりたい。
+ここからさらにMarkuplintのプリテンダーの設定をしたり、Secretlintのルールをカスタマイズしたりすることで、さらに便利な環境にしていくことができそうな気がしています。
 
-コミット時は Prettier と Secretlint、CI で各種リントとコンパイラチェック、というように分けても良いかもしれない。
+また、今回はテストツールや CI の設定は行いませんでしたが、今後はこれらも整えてより堅牢な環境を構築できるようになりたいです。
+コミット時はシンプルにPrettierやSecretlintのみを、CIでは各種Lintやコンパイラチェックを実行する、というようなフローにしても良いかもしれませんね。
 
-まだまだやれることはありそうなので引き続き高めていきたい。
-
-Secretlint と Markuplint は情報少ないのでもっとできることありそう。
+長い記事でしたが最後までお読みいただき、本当にありがとうございました！
 
 ## 参考記事
 
