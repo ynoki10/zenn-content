@@ -23,6 +23,10 @@ Next.jsのボイラープレートとして活用可能ですので、興味の�
 アドバイスやご感想のコメントもお待ちしております！
 :::
 
+:::details 更新履歴
+- JSXのPropsの順番をソート を追加しました（2024/02/04）
+:::
+
 ## 概要
 
 ### 使用ツール・パッケージ
@@ -61,7 +65,8 @@ Next.jsのボイラープレートとして活用可能ですので、興味の�
 ### 設定したこと
 
 - TypeScript と ESLint のルール設定
-- import 順の整列
+- import の整列
+- JSX の Props の整列【2024/02 追記】
 - Tailwind CSS の記法の統一
 - マークアップ（HTML）の構文チェック（Markuplint）
 - API トークンや秘密鍵などのコミットを防止（Secretlint）
@@ -512,6 +517,26 @@ npm i -D eslint-plugin-unused-imports
 こだわりたい方は[公式ドキュメント](https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md)や以下の記事などを参考にしてみてください。
 https://zenn.dev/knowledgework/articles/0994f518015c04#import%E3%81%AE%E8%87%AA%E5%8B%95%E6%95%B4%E5%88%97%EF%BC%88import%2Forder%EF%BC%89
 https://zenn.dev/riemonyamada/articles/02e8c172e1eeb1
+
+### JSXのPropsの順番をソート【2024/02 追記】
+
+JSXコンポーネントのPropsの順番も自動でソートしてもらいましょう。
+これは `eslint-plugin-react` の [jsx-sort-props](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-sort-props.md) を有効にするだけで可能です。
+
+@[card](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-sort-props.md)
+
+`eslint-plugin-react` は `eslint-config-next` に含まれているため、ここでもパッケージのインストールや `plugins` の指定は不要です。
+
+```diff json:eslintrc.json
+   "rules": {
+     ...
++    "react/jsx-sort-props": "error",
+   }
+```
+
+これにはビルドサイズを減らす効果もあるようです。
+
+https://zenn.dev/team_zenn/articles/sorting-props-reduces-gzip-size
 
 ### Tailwind CSSに関する設定を追加
 
