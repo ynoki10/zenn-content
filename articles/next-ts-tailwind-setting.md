@@ -534,7 +534,7 @@ JSXコンポーネントのPropsの順番も自動でソートしてもらいま
    }
 ```
 
-これにはビルドサイズを減らす効果もあるようです。
+これにはビルドサイズを減らす効果もあるようです。コードもきれいになって一石二鳥ですね 🙌
 
 https://zenn.dev/team_zenn/articles/sorting-props-reduces-gzip-size
 
