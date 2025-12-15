@@ -3,7 +3,7 @@ title: "Kinsta + DevKinstaで快適WordPressテーマ開発 （ローカル開�
 emoji: "🏗️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["wordpress", "kinsta", "devkinsta"]
-published: false
+published: true
 ---
 
 この記事は[ヌーラボブログリレー2025 冬 Tech](https://nulab.com/ja/blog/nulab/nulaber-blog-relay-2025-winter/)の15日目の記事です。
